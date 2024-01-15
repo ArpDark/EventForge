@@ -12,7 +12,10 @@ import { join } from 'path';
 import { cwd } from 'process';
 import { authenticate } from '@google-cloud/local-auth';
 import { google } from 'googleapis';
+import path from 'path';
 // import { log } from 'console';
+
+const port=process.env.PORT||8000;
 
 dotenv.config();
 const app = express();
@@ -323,9 +326,6 @@ app.post("/login",(req,res)=>{
 });
 
 
-
-
-
-app.listen(8000, function() {
+app.listen(port, function() {
     console.log("Server started successsfully");
 });
