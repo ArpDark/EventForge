@@ -21,7 +21,7 @@ function Home(){
     const fetchUser= async()=>{
       try
       {
-        const loggedInUser = window.sessionStorage.getItem("user");
+        const loggedInUser = window.localStorage.getItem("user");
         setUser(loggedInUser);
       }
       catch(error)
@@ -34,7 +34,7 @@ function Home(){
   }, []);
   
   function handleLogout(){
-    sessionStorage.clear();
+    localStorage.clear();
     navigate("/login");
   }
 
@@ -103,9 +103,9 @@ function Home(){
   }
 
   function fetchEventNames(){
-    // console.log(window.sessionStorage.getItem("user"));
+    // console.log(window.localStorage.getItem("user"));
     const userData={
-      'username':window.sessionStorage.getItem("user")
+      'username':window.localStorage.getItem("user")
     };
     const config={
       method:'post',

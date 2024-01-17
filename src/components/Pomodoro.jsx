@@ -82,7 +82,7 @@ const Pomodoro = () => {
   }
 
   function handleLogout(){
-    sessionStorage.clear();
+    localStorage.clear();
     navigate("/login");
   }
 

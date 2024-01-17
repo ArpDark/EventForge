@@ -22,7 +22,7 @@ function Login(){
     };
     axios(configuration)
     .then((result)=>{
-      window.sessionStorage.setItem('user', result.data.username);
+      window.localStorage.setItem('user', result.data.username);
       // console.log(result.data.username);
       navigate("/home");
     })

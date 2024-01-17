@@ -5,12 +5,11 @@ import NoteDetailPopup from "./NoteDetailPopup";
 import axios from "axios";
 import qs from "qs";
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
-import { Icon } from "@mui/material";
 
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
+// function classNames(...classes) {
+//   return classes.filter(Boolean).join(' ')
+// }
 
 function Home(){
   const navigate=useNavigate();
@@ -25,7 +24,7 @@ function Home(){
     const fetchUser= async()=>{
       try
       {
-        const loggedInUser = window.sessionStorage.getItem("user");
+        const loggedInUser = window.localStorage.getItem("user");
         setUser(loggedInUser);
       }
       catch(error)
@@ -38,7 +37,7 @@ function Home(){
   }, []);
   
   function handleLogout(){
-    sessionStorage.clear();
+    localStorage.clear();
     navigate("/login");
   }
 
@@ -97,9 +96,9 @@ function Home(){
   }
 
   function fetchNoteNames(){
-    console.log(window.sessionStorage.getItem("user"));
+    console.log(window.localStorage.getItem("user"));
     const userData={
-      'username':window.sessionStorage.getItem("user")
+      'username':window.localStorage.getItem("user")
     };
     const config2={
       method:'post',
