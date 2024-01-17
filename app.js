@@ -12,17 +12,14 @@ import { join } from 'path';
 import { cwd } from 'process';
 import { authenticate } from '@google-cloud/local-auth';
 import { google } from 'googleapis';
-import path from 'path';
-// import { log } from 'console';
 
 const port=process.env.PORT||8000;
-
 dotenv.config();
 const app = express();
 app.use(cors());
 const corsOptions ={
     origin:'http://localhost:3000', 
-    credentials:true,            //access-control-allow-credentials:true
+    credentials:true,            
     optionSuccessStatus:200
 }
 app.use(cors(corsOptions));
@@ -40,21 +37,18 @@ app.use(passport.session());
 
 mongoose.set("strictQuery",false);
 mongoose.connect("mongodb+srv://"+process.env.DB_UID+":"+process.env.DB_PWD+"@cluster0.qirmb0u.mongodb.net/?retryWrites=true&w=majority");
-// mongoose.connect("mongodb://127.0.0.1/productivityDB");
 
 const userSchema=new mongoose.Schema({
     username: String,
     email:String,
     password:String,
 });
-
 const noteSchema=new mongoose.Schema({
     notename:{type:String,default:" "},
     noteid:{type:String,default:" "},
     uid:String,
     notecontent:{type:String,default:" "}
 });
-
 const eventSchema=new mongoose.Schema({
     eventname:{type:String,default:" "},
     eventid:{type:String,default:" "},
@@ -68,13 +62,11 @@ const eventSchema=new mongoose.Schema({
     timezone:{type:String,default:" "}
 });
 
-
 userSchema.plugin(passportLocalMongoose);
 
 const User=mongoose.model("User",userSchema);
 const Note=mongoose.model("Note",noteSchema);
 const Event=mongoose.model("Event",eventSchema);
-
 
 passport.use(User.createStrategy());
 passport.serializeUser(function(user, cb) {
@@ -85,12 +77,10 @@ passport.serializeUser(function(user, cb) {
     });
 });
 passport.deserializeUser(function(user, cb) {
-process.nextTick(function() {
+  process.nextTick(function() {
     return cb(null, user);
+  });
 });
-});
-
-
 
 app.post("/createnote",(req,res)=>{
     const note=new Note({
@@ -116,32 +106,10 @@ app.post("/notedetails",(req,res)=>{
     });
 });
 app.post("/notedelete",(req,res)=>{
-  // const SCOPES = ['https://www.googleapis.com/auth/calendar.events'];
-  // const CREDENTIALS_PATH = join(cwd(), 'credentials.json');    
-  // async function authorize() {
-  //   let client = await authenticate({
-  //     scopes: SCOPES,
-  //     keyfilePath: CREDENTIALS_PATH,
-  //   });
-  //   return client;
-  // }
-  // console.log(eventName);
   Note.deleteOne({uid:req.body.uid,_id:req.body._id}).then(()=>{
       res.send("Deleted from mongoDB");
   });
-
-  // async function deleteEvent(auth){
-  //     const calendar = google.calendar({version: 'v3', auth});
-  //     const calendarId='primary';
-  //     const eventId=req.body.eventid;
-  //     calendar.events.delete({calendarId , eventId }, (err) => {
-  //         if (err) return console.error('Error deleting event:', err);
-  //         console.log('Event deleted successfully.');
-  //     });
-  // }
-  // authorize().then(deleteEvent).catch(console.error);
 });
-
 
 app.post("/createevent",(req,res)=>{
     const newEvent=new Event({
@@ -174,82 +142,84 @@ app.post("/eventdetails",(req,res)=>{
     });
 });
 app.post("/saveoncalendar",(req,res)=>{
-    function startDateTime(){
-        const utcDate = new Date(req.body.startdate);
-        const utcTime = new Date(req.body.starttime);
-        // const localDate=utcDate.toLocaleString('en-US',{timeZone:req.body.timezone});
-        const localDate=moment.tz(utcDate,req.body.timezone).format('YYYY-MM-DD HH:mm:ss');
-        const localTime=moment.tz(utcTime,req.body.timezone).format('YYYY-MM-DD HH:mm:ss');
-        return(localDate.substring(0,10)+'T'+localTime.substring(11,19));
-    }
-    function endDateTime(){
-        const utcDate = new Date(req.body.enddate);
-        const utcTime = new Date(req.body.endtime);
-        // const localDate=utcDate.toLocaleString('en-US',{timeZone:req.body.timezone});
-        const localDate=moment.tz(utcDate,req.body.timezone).format('YYYY-MM-DD HH:mm:ss');
-        const localTime=moment.tz(utcTime,req.body.timezone).format('YYYY-MM-DD HH:mm:ss');
-        return(localDate.substring(0,10)+'T'+localTime.substring(11,19));
-    }
-    console.log(startDateTime());
-    console.log(endDateTime());
-    const SCOPES = ['https://www.googleapis.com/auth/calendar'];
-    const CREDENTIALS_PATH = join(cwd(), 'credentials.json');    
-    async function authorize() {
-      let client = await authenticate({
-        scopes: SCOPES,
-        keyfilePath: CREDENTIALS_PATH,
-      });
-      return client;
-    }
-    async function listEvents(auth) {
-      const calendar = google.calendar({version: 'v3', auth});
-      const eventdetails = {
-        'summary': req.body.eventname,
-        'location': req.body.location,
-        'description': req.body.description,
-        'start': {
-          'dateTime': startDateTime(),
-          'timeZone': req.body.timezone,
-        },
-        'end': {
-          'dateTime': endDateTime(),
-          'timeZone': req.body.timezone,
-        },
-        'reminders': {
-          'useDefault': false,
-          'overrides': [
-            {'method': 'email', 'minutes': 24 * 60},
-            {'method': 'popup', 'minutes': 30},
-          ],
-        },
-      };
-      calendar.events.insert({
-        auth: auth,
-        calendarId: 'primary',
-        resource: eventdetails,
-      }, function(err, event) {
-        if (err) {
-          console.log('There was an error contacting the Calendar service: ' + err);
-          return;
-        }
-        console.log('Event created');
-        // console.log(event.data.id);
-        // console.log(event.data.htmlLink);
-        const eventFinder={
-            uid:req.body.uid,
-            eventname:req.body.eventname,
-            location:req.body.location,
-            description:req.body.description,
-            startdate:req.body.startdate,
-            enddate:req.body.enddate,
-            starttime:req.body.starttime,
-            endtime:req.body.endtime,
-            timezone:req.body.timezone,
-        }
-        Event.findOneAndUpdate(eventFinder,{eventid:event.data.id},{returnOriginal:false}).then((e)=>{console.log(e);});
-      });
-    }
-    authorize().then(listEvents).catch(console.error);
+  function startDateTime(){
+      const utcDate = new Date(req.body.startdate);
+      const utcTime = new Date(req.body.starttime);
+      // const localDate=utcDate.toLocaleString('en-US',{timeZone:req.body.timezone});
+      const localDate=moment.tz(utcDate,req.body.timezone).format('YYYY-MM-DD HH:mm:ss');
+      const localTime=moment.tz(utcTime,req.body.timezone).format('YYYY-MM-DD HH:mm:ss');
+      return(localDate.substring(0,10)+'T'+localTime.substring(11,19));
+  }
+  function endDateTime(){
+      const utcDate = new Date(req.body.enddate);
+      const utcTime = new Date(req.body.endtime);
+      // const localDate=utcDate.toLocaleString('en-US',{timeZone:req.body.timezone});
+      const localDate=moment.tz(utcDate,req.body.timezone).format('YYYY-MM-DD HH:mm:ss');
+      const localTime=moment.tz(utcTime,req.body.timezone).format('YYYY-MM-DD HH:mm:ss');
+      return(localDate.substring(0,10)+'T'+localTime.substring(11,19));
+  }
+  console.log(startDateTime());
+  console.log(endDateTime());
+  
+  const SCOPES = ['https://www.googleapis.com/auth/calendar'];
+  const CREDENTIALS_PATH = join(cwd(), 'credentials.json');    
+  async function authorize() {
+    let client = await authenticate({
+      scopes: SCOPES,
+      keyfilePath: CREDENTIALS_PATH,
+    });
+    console.log(client);
+    return client;
+  }
+  async function listEvents(auth) {
+    const calendar = google.calendar({version: 'v3', auth});
+    const eventdetails = {
+      'summary': req.body.eventname,
+      'location': req.body.location,
+      'description': req.body.description,
+      'start': {
+        'dateTime': startDateTime(),
+        'timeZone': req.body.timezone,
+      },
+      'end': {
+        'dateTime': endDateTime(),
+        'timeZone': req.body.timezone,
+      },
+      'reminders': {
+        'useDefault': false,
+        'overrides': [
+          {'method': 'email', 'minutes': 24 * 60},
+          {'method': 'popup', 'minutes': 30},
+        ],
+      },
+    };
+    calendar.events.insert({
+      auth: auth,
+      calendarId: 'primary',
+      resource: eventdetails,
+    }, function(err, event) {
+      if (err) {
+        console.log('There was an error contacting the Calendar service: ' + err);
+        return;
+      }
+      console.log('Event created');
+      // console.log(event.data.id);
+      // console.log(event.data.htmlLink);
+      const eventFinder={
+        uid:req.body.uid,
+        eventname:req.body.eventname,
+        location:req.body.location,
+        description:req.body.description,
+        startdate:req.body.startdate,
+        enddate:req.body.enddate,
+        starttime:req.body.starttime,
+        endtime:req.body.endtime,
+        timezone:req.body.timezone,
+      }
+      Event.findOneAndUpdate(eventFinder,{eventid:event.data.id},{returnOriginal:false}).then((e)=>{console.log(e);});
+    });
+  }
+  authorize().then(listEvents).catch(console.error);
 });
 
 app.post("/eventdelete",(req,res)=>{
