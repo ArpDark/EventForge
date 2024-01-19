@@ -22,6 +22,7 @@ const Popup= ({ isOpen, onClose, createNote }) => {
     createNote(noteDetails);
     setNoteName("");
     setNoteContent("");
+    window.location.reload();
   };
 
 

@@ -72,7 +72,6 @@ function Home(){
     
   };
   const closePopupD = () => {
-    fetchNoteNames();
     setPopupOpenD(false);
   };
   
@@ -124,7 +123,7 @@ function Home(){
 
   if(user){
   return (
-    <div className="flex relative h-dvh max-h-full bg-slate-50 justify-center">
+    <div className="flex relative min-h-screen h-dvh overflow-y-auto bg-slate-50 justify-center">
       <div className="flex fixed  justify-center bg-[#2D2D2D] w-screen h-28 space-x-12 [box-shadow:_0px_15px_10px_rgb(0_0_0_/_25%)] z-10 ">
         <a href="/home" className="flex h-10 w-36 self-center justify-center  rounded-md bg-white px-3 py-2 text-sm  font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 ">My Notes</a>
 
@@ -137,7 +136,7 @@ function Home(){
       
       <div className="grid grid-flow-row  grid-cols-4 gap-16 relative mt-36 border-2 border-green-200 z-0">
 
-        <button onClick={openPopup} className="grid  bg- text-black shadow-lg rounded-md w-60 h-36 justify-center items-center">
+        <button onClick={openPopup} className="grid  bg-white text-black shadow-lg rounded-md w-60 h-36 justify-center items-center">
           <div>
             <AddOutlinedIcon sx={{fontSize:72}}/>
           </div>

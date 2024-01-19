@@ -33,7 +33,7 @@ const NoteDetailPopup = ({isOpen, onClose,noteDetails}) =>{
         axios(config)
         .then((result)=>{
             console.log(result.data);
-            onClose();
+            window.location.reload();
         })
         .catch((error)=>{console.log("Error occurred");});
     }

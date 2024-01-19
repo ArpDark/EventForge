@@ -65,14 +65,15 @@ const EventPopup= ({ isOpen, onClose, createEvent }) => {
     };
     // const details=[eventName,eventLoc,eventDesc,eventDate,selectedTimezone,eventStart,eventEnd];
     createEvent(details);
+    window.location.reload();
   };
 
 
   return (
-    <div className={`fixed top-0 left-0 w-full h-full flex z-20 items-center justify-center ${isOpen ? '' : 'hidden'}`}>
-      <div className="bg-white p-6 rounded-lg shadow-lg">
-        <h2 className="text-2xl mb-4">Event form</h2>
-        <form onSubmit={handleSubmit} className='h-96 overflow-y-auto'>
+    <div className={`fixed top-0 backdrop-blur-[2px] left-0 w-full h-full flex z-20 items-center justify-center ${isOpen ? '' : 'hidden'}`}>
+      <div className="bg-white p-6 rounded-lg shadow-lg ">
+        <h2 className="text-2xl mb-4">Create Event</h2>
+        <form onSubmit={handleSubmit} className='h-72 overflow-y-auto'>
           <label htmlFor="name" className="block text-gray-600">Name</label>
           <input type="text" id="name" name="name" onChange={handleEventName} className="w-full border rounded-md px-3 py-2 mb-2" required value={eventName}/>
 

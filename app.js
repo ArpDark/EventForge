@@ -223,30 +223,30 @@ app.post("/saveoncalendar",(req,res)=>{
 });
 
 app.post("/eventdelete",(req,res)=>{
-    const SCOPES = ['https://www.googleapis.com/auth/calendar.events'];
-    const CREDENTIALS_PATH = join(cwd(), 'credentials.json');    
-    async function authorize() {
-      let client = await authenticate({
-        scopes: SCOPES,
-        keyfilePath: CREDENTIALS_PATH,
-      });
-      return client;
-    }
+    // const SCOPES = ['https://www.googleapis.com/auth/calendar.events'];
+    // const CREDENTIALS_PATH = join(cwd(), 'credentials.json');    
+    // async function authorize() {
+    //   let client = await authenticate({
+    //     scopes: SCOPES,
+    //     keyfilePath: CREDENTIALS_PATH,
+    //   });
+    //   return client;
+    // }
     // console.log(eventName);
-    Event.deleteOne({eventid:req.body.eventid}).then(()=>{
-        console.log("Deleted from mongoDB");
+    Event.deleteOne({uid:req.body.uid,_id:req.body._id}).then(()=>{
+        res.send("Deleted from mongoDB");
     });
 
-    async function deleteEvent(auth){
-        const calendar = google.calendar({version: 'v3', auth});
-        const calendarId='primary';
-        const eventId=req.body.eventid;
-        calendar.events.delete({calendarId , eventId }, (err) => {
-            if (err) return console.error('Error deleting event:', err);
-            console.log('Event deleted successfully.');
-        });
-    }
-    authorize().then(deleteEvent).catch(console.error);
+    // async function deleteEvent(auth){
+    //     const calendar = google.calendar({version: 'v3', auth});
+    //     const calendarId='primary';
+    //     const eventId=req.body.eventid;
+    //     calendar.events.delete({calendarId , eventId }, (err) => {
+    //         if (err) return console.error('Error deleting event:', err);
+    //         console.log('Event deleted successfully.');
+    //     });
+    // }
+    // authorize().then(deleteEvent).catch(console.error);
 });
 
 app.post("/register",(req,res)=>{
