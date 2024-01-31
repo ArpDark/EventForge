@@ -9,12 +9,22 @@ import passportLocalMongoose from 'passport-local-mongoose';
 import cors from 'cors';
 import moment from 'moment-timezone';
 import { join } from 'path';
+import { promises as fs } from 'fs';
 import { cwd } from 'process';
-import { authenticate } from '@google-cloud/local-auth';
 import { google } from 'googleapis';
+import open from 'open';
+import { createClient } from 'redis';
+// import { Entity, Schema } from 'redis-om';
+dotenv.config();
 
 const port=process.env.PORT||8000;
-dotenv.config();
+
+const oauth2Client = new google.auth.OAuth2(
+  process.env.OAUTH_CLIENT_ID,
+  process.env.OAUTH_CLIENT_SECRET,
+  process.env.OAUTH_REDIRECT_URI
+);
+
 const app = express();
 app.use(cors());
 const corsOptions ={
@@ -28,15 +38,30 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(session({
     secret:"abcdefghijklmnop",
-    resave:false,
-    saveUninitialized:false
+    resave:true,
+    saveUninitialized:true,
 }));
 
 app.use(passport.initialize());
 app.use(passport.session());
 
+const client =createClient({
+  password:process.env.REDIS_PWD,
+  socket: {
+      host: process.env.REDIS_HOST,
+      port: process.env.REDIS_PORT
+  }
+});
+client.on('error', err => console.log('Redis Client Error', err));
+await client.connect();
+client.on('connect',()=>{console.log("Redis Connected");});
+await client.set('key', 'value');
+const value = await client.get('key');
+console.log(value);
+
 mongoose.set("strictQuery",false);
 mongoose.connect("mongodb+srv://"+process.env.DB_UID+":"+process.env.DB_PWD+"@cluster0.qirmb0u.mongodb.net/?retryWrites=true&w=majority");
+
 
 const userSchema=new mongoose.Schema({
     username: String,
@@ -141,7 +166,99 @@ app.post("/eventdetails",(req,res)=>{
         console.log("Event details Sent Successfully");
     });
 });
-app.post("/saveoncalendar",(req,res)=>{
+
+app.get('/oauth2callback', async (req, res) => {
+  const code = req.query.code;
+  try {
+    // Exchange the authorization code for tokens
+    const r = await oauth2Client.getToken(code);
+    await oauth2Client.setCredentials(r.tokens);
+    // console.log(oauth2Client);
+    const calendar = google.calendar({version: 'v3', auth:oauth2Client});
+    const caller = await client.get('caller');
+    const details=await client.hGetAll('eventdetails');
+    console.log(details);
+    if(caller==="save")
+    {
+      // console.log(details._id);
+      const eventdetails = {
+        'summary': details.eventname,
+        'location': details.location,
+        'description': details.description,
+        'start': {
+          'dateTime': details.startdatetime,
+          'timeZone': details.timezone,
+        },
+        'end': {
+          'dateTime': details.enddatetime,
+          'timeZone': details.timezone,
+        },
+        'reminders': {
+          'useDefault': false,
+          'overrides': [
+            {'method': 'email', 'minutes': 24 * 60},
+            {'method': 'popup', 'minutes': 30},
+          ],
+        },
+      };
+      // console.log(eventdetails);
+      calendar.events.insert({
+        auth: oauth2Client,
+        calendarId: 'primary',
+        resource: eventdetails,
+      }, function(err, event) {
+        if (err) {
+          console.log('There was an error contacting the Calendar service: ' + err);
+          return;
+        }
+        else{
+          // console.log("event created");
+          // console.log(event.data.htmlLink);
+          const eventFinder={
+            _id:details._id
+            }
+            Event.findOneAndUpdate(eventFinder,{eventid:event.data.id},{returnOriginal:false}).then((e)=>{console.log(e);});
+            // const redirectUrl = 'http://localhost:3000/events';
+            res.redirect(302,event.data.htmlLink);
+        }
+      });
+    }
+    else if(caller==="delete")
+    {
+      const calendarId='primary';
+      const eventId=details.eventid;
+      calendar.events.delete({calendarId , eventId }, (err) => {
+          if (err) return console.error('Error deleting event:', err);
+          console.log('Event deleted successfully from calendar');
+          const redirectUrl = 'http://localhost:3000/events';
+          res.redirect(302,redirectUrl);
+      });
+    }
+    
+
+  } catch (error) {
+    console.error('Error exchanging code for tokens:', error.message);
+    res.status(500).send('Error exchanging code for tokens');
+  }
+});
+app.post("/saveoncalendar",async(req,res)=>{
+  await client.set('caller', 'save');
+  await client.hSet('eventdetails', {
+    uid:req.body.uid,
+    _id:req.body._id,
+    eventname: req.body.eventname,
+    location: req.body.location,
+    description: req.body.description,
+    startdatetime:startDateTime(),
+    enddatetime:endDateTime(),
+    timezone:req.body.timezone
+  });
+    const url = oauth2Client.generateAuthUrl({
+      access_type: 'offline',
+      scope: "https://www.googleapis.com/auth/calendar"
+    });
+    open(url, {wait: false});
+
   function startDateTime(){
       const utcDate = new Date(req.body.startdate);
       const utcTime = new Date(req.body.starttime);
@@ -158,95 +275,24 @@ app.post("/saveoncalendar",(req,res)=>{
       const localTime=moment.tz(utcTime,req.body.timezone).format('YYYY-MM-DD HH:mm:ss');
       return(localDate.substring(0,10)+'T'+localTime.substring(11,19));
   }
-  console.log(startDateTime());
-  console.log(endDateTime());
-  
-  const SCOPES = ['https://www.googleapis.com/auth/calendar'];
-  const CREDENTIALS_PATH = join(cwd(), 'credentials.json');    
-  async function authorize() {
-    let client = await authenticate({
-      scopes: SCOPES,
-      keyfilePath: CREDENTIALS_PATH,
-    });
-    console.log(client);
-    return client;
-  }
-  async function listEvents(auth) {
-    const calendar = google.calendar({version: 'v3', auth});
-    const eventdetails = {
-      'summary': req.body.eventname,
-      'location': req.body.location,
-      'description': req.body.description,
-      'start': {
-        'dateTime': startDateTime(),
-        'timeZone': req.body.timezone,
-      },
-      'end': {
-        'dateTime': endDateTime(),
-        'timeZone': req.body.timezone,
-      },
-      'reminders': {
-        'useDefault': false,
-        'overrides': [
-          {'method': 'email', 'minutes': 24 * 60},
-          {'method': 'popup', 'minutes': 30},
-        ],
-      },
-    };
-    calendar.events.insert({
-      auth: auth,
-      calendarId: 'primary',
-      resource: eventdetails,
-    }, function(err, event) {
-      if (err) {
-        console.log('There was an error contacting the Calendar service: ' + err);
-        return;
-      }
-      console.log('Event created');
-      // console.log(event.data.id);
-      // console.log(event.data.htmlLink);
-      const eventFinder={
-        uid:req.body.uid,
-        eventname:req.body.eventname,
-        location:req.body.location,
-        description:req.body.description,
-        startdate:req.body.startdate,
-        enddate:req.body.enddate,
-        starttime:req.body.starttime,
-        endtime:req.body.endtime,
-        timezone:req.body.timezone,
-      }
-      Event.findOneAndUpdate(eventFinder,{eventid:event.data.id},{returnOriginal:false}).then((e)=>{console.log(e);});
-    });
-  }
-  authorize().then(listEvents).catch(console.error);
 });
 
-app.post("/eventdelete",(req,res)=>{
-    // const SCOPES = ['https://www.googleapis.com/auth/calendar.events'];
-    // const CREDENTIALS_PATH = join(cwd(), 'credentials.json');    
-    // async function authorize() {
-    //   let client = await authenticate({
-    //     scopes: SCOPES,
-    //     keyfilePath: CREDENTIALS_PATH,
-    //   });
-    //   return client;
-    // }
-    // console.log(eventName);
+app.post("/eventdelete",async (req,res)=>{
+    if(req.body.eventid!=" ")
+    {
+      await client.set('caller', 'delete');
+      await client.hSet('eventdetails', {
+        eventid:req.body.eventid
+      });
+      const url = oauth2Client.generateAuthUrl({
+        access_type: 'offline',
+        scope: "https://www.googleapis.com/auth/calendar"
+      });
+      open(url, {wait: false});
+    }
     Event.deleteOne({uid:req.body.uid,_id:req.body._id}).then(()=>{
-        res.send("Deleted from mongoDB");
+      res.send("Deleted from mongoDB");
     });
-
-    // async function deleteEvent(auth){
-    //     const calendar = google.calendar({version: 'v3', auth});
-    //     const calendarId='primary';
-    //     const eventId=req.body.eventid;
-    //     calendar.events.delete({calendarId , eventId }, (err) => {
-    //         if (err) return console.error('Error deleting event:', err);
-    //         console.log('Event deleted successfully.');
-    //     });
-    // }
-    // authorize().then(deleteEvent).catch(console.error);
 });
 
 app.post("/register",(req,res)=>{

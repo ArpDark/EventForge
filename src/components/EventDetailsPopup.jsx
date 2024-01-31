@@ -8,9 +8,10 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 
+
 const EventDetailsPopup = ({isOpen, onClose,eventDetails}) =>{
     const saveOnCalendar=()=>{
-        // console.log(eventDetails[0]);
+        console.log(eventDetails[0]);
         const config={
             method:'post',
             url:'http://localhost:8000/saveoncalendar',
@@ -61,17 +62,6 @@ const EventDetailsPopup = ({isOpen, onClose,eventDetails}) =>{
                             <AccessTimeIcon/>
                             <p id='time'>{moment(eventDetails[0].starttime).tz(eventDetails[0].timezone).format("hh:mm A")} - {moment(eventDetails[0].endtime).tz(eventDetails[0].timezone).format("hh:mm A")}</p>
                         </div>
-                        
-                        {/* <label htmlFor="startdate"className="block text-gray-600">Start Date</label>
-                        <p id='startdate'>{moment(eventDetails[0].startdate).tz(eventDetails[0].timezone).format("DD-MM-YYYY")}</p>
-                        <label htmlFor="enddate"className="block text-gray-600"> End Date</label>
-                        <p id='enddate'>{moment(eventDetails[0].enddate).tz(eventDetails[0].timezone).format("DD-MM-YYYY")}</p> */}
-                        {/* <label htmlFor="starttime" className="block text-gray-600">Start Time</label>
-                        <p id='starttime'>{moment(eventDetails[0].starttime).tz(eventDetails[0].timezone).format("hh:mm A")}</p> */}
-                        {/* <label htmlFor="endtime" className="block text-gray-600">End Time</label>
-                        <p id='endtime'>{moment(eventDetails[0].endtime).tz(eventDetails[0].timezone).format("hh:mm A")}</p> */}
-                        {/* <label htmlFor="timezone" className="block text-gray-600">Timezone</label>
-                        <p id='timezone'>{eventDetails[0].timezone}</p> */}
                     </div>
                     <button onClick={saveOnCalendar} className="bg-blue-500 text-white p-2 rounded-md w-full">Save</button>
                     <button onClick={deleteEvent} className="self-center border-2 border-green w-fit h-fit">
