@@ -5,10 +5,11 @@ import qs from "qs";
 
 
 const NoteDetailPopup = ({isOpen, onClose,noteDetails}) =>{
+    const apiUrl='http://localhost:8000';
     const deleteNote=()=>{
         const config={
             method:'post',
-            url:'http://localhost:8000/notedelete',
+            url:apiUrl+'/notedelete',
             headers: { 'content-type': 'application/x-www-form-urlencoded' },
             data:qs.stringify(noteDetails[0])
         };

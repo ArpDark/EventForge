@@ -6,6 +6,7 @@ import qs from 'qs';
 function Login(){
   const [username,setUsername]=useState("");
   const [password,setPassword]=useState("");
+  const apiUrl='http://localhost:8000';
   const navigate=useNavigate();
 
   function handleSubmit(event){
@@ -16,7 +17,7 @@ function Login(){
     }
     const configuration={
       method:'post',
-      url:'http://localhost:8000/login',
+      url:apiUrl+'/login',
       headers: { 'content-type': 'application/x-www-form-urlencoded' },
       data:qs.stringify(userData)
     };

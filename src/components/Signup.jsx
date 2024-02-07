@@ -8,6 +8,7 @@ function Signup(){
   const [email,setEmail]=useState("");
   const [password,setPassword]=useState("");
   const navigate=useNavigate();
+  const apiUrl='http://localhost:8000';
 
   function handleSubmit(event){
     event.preventDefault();
@@ -18,7 +19,7 @@ function Signup(){
     }
     const configuration={
       method:'post',
-      url:'http://localhost:8000/register',
+      url:apiUrl+'/register',
       headers: { 'content-type': 'application/x-www-form-urlencoded' },
       data:qs.stringify(userData)
     };

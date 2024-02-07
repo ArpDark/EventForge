@@ -20,6 +20,7 @@ function Home(){
   const [noteDetails,setNoteDetails]=useState({});
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [isPopupOpenD, setPopupOpenD] = useState(false);
+  const apiUrl='http://localhost:8000';
 
   useEffect(() => {
     const fetchUser= async()=>{
@@ -59,7 +60,7 @@ function Home(){
     }
     const configuration={
       method:'post',
-      url:'http://localhost:8000/notedetails',
+      url:apiUrl+'/notedetails',
       headers: { 'content-type': 'application/x-www-form-urlencoded' },
       data:qs.stringify(note1)
     };
@@ -81,7 +82,7 @@ function Home(){
     noteData.username=user;
     const configuration={
       method:'post',
-      url:'http://localhost:8000/createnote',
+      url:apiUrl+'/createnote',
       headers: { 'content-type': 'application/x-www-form-urlencoded' },
       data:qs.stringify(noteData)
     };
@@ -102,7 +103,7 @@ function Home(){
     };
     const config2={
       method:'post',
-      url:'http://localhost:8000/notenames',
+      url:apiUrl+'/notenames',
       headers: { 'content-type': 'application/x-www-form-urlencoded' },
       data:qs.stringify(userData)
     };
@@ -133,7 +134,6 @@ function Home(){
           <div>
             <AddOutlinedIcon sx={{fontSize:72}}/>
           </div>
-          {/* <p className="border-2 border-green-300 mb-4">New Note</p> */}
         </button>
         <Popup isOpen={isPopupOpen} onClose={closePopup} createNote={createNote} />
         

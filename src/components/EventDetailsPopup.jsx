@@ -10,11 +10,13 @@ import DateRangeIcon from '@mui/icons-material/DateRange';
 
 
 const EventDetailsPopup = ({isOpen, onClose,eventDetails}) =>{
+    const apiUrl='http://localhost:8000';
+
     const saveOnCalendar=()=>{
         console.log(eventDetails[0]);
         const config={
             method:'post',
-            url:'http://localhost:8000/saveoncalendar',
+            url:apiUrl+'/saveoncalendar',
             headers: { 'content-type': 'application/x-www-form-urlencoded' },
             data:qs.stringify(eventDetails[0])
         };
@@ -27,7 +29,7 @@ const EventDetailsPopup = ({isOpen, onClose,eventDetails}) =>{
     const deleteEvent=()=>{
         const config={
             method:'post',
-            url:'http://localhost:8000/eventdelete',
+            url:apiUrl+'/eventdelete',
             headers: { 'content-type': 'application/x-www-form-urlencoded' },
             data:qs.stringify(eventDetails[0])
         };

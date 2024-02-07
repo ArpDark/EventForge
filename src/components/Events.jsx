@@ -14,6 +14,7 @@ function Home(){
   const [events,setEvents]=useState([]);
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [isPopupOpenD, setPopupOpenD] = useState(false);
+  const apiUrl='http://localhost:8000';
 
   useEffect(() => {
     const fetchUser= async()=>{
@@ -53,7 +54,7 @@ function Home(){
     }
     const configuration={
       method:'post',
-      url:'http://localhost:8000/eventdetails',
+      url:apiUrl+'/eventdetails',
       headers: { 'content-type': 'application/x-www-form-urlencoded' },
       data:qs.stringify(event1)
     };
@@ -84,7 +85,7 @@ function Home(){
     newEvent.username=user;
     const configuration={
       method:'post',
-      url:'http://localhost:8000/createevent',
+      url:apiUrl+'/createevent',
       headers: { 'content-type': 'application/x-www-form-urlencoded' },
       data:qs.stringify(newEvent)
     };
@@ -107,7 +108,7 @@ function Home(){
     };
     const config={
       method:'post',
-      url:'http://localhost:8000/eventnames',
+      url:apiUrl+'/eventnames',
       headers: { 'content-type': 'application/x-www-form-urlencoded' },
       data:qs.stringify(userData)
     };
