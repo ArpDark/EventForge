@@ -14,7 +14,6 @@ import { cwd } from 'process';
 import { google } from 'googleapis';
 import open from 'open';
 import { createClient } from 'redis';
-// import { Entity, Schema } from 'redis-om';
 dotenv.config();
 
 const port=process.env.PORT||8000;
@@ -55,9 +54,7 @@ const client =createClient({
 client.on('error', err => console.log('Redis Client Error', err));
 await client.connect();
 client.on('connect',()=>{console.log("Redis Connected");});
-await client.set('key', 'value');
-const value = await client.get('key');
-console.log(value);
+
 
 mongoose.set("strictQuery",false);
 mongoose.connect("mongodb+srv://"+process.env.DB_UID+":"+process.env.DB_PWD+"@cluster0.qirmb0u.mongodb.net/?retryWrites=true&w=majority");
@@ -114,20 +111,16 @@ app.post("/createnote",(req,res)=>{
         notecontent:req.body.notecontent
     });
     note.save();
-    console.log("Note Created Successfully");
     res.send(note);
 });
 app.post("/notenames", (req, res)=>{
-    console.log(req.body.username);
   Note.find({uid:req.body.username}).then((notes)=>{
     res.send(notes);
-    console.log("Sent Successfully");
   });
 });
 app.post("/notedetails",(req,res)=>{
     Note.find({uid:req.body.username,_id:req.body._id}).then((notes)=>{
         res.send(notes);
-        console.log("Sent Successfully");
     });
 });
 app.post("/notedelete",(req,res)=>{
@@ -148,39 +141,31 @@ app.post("/createevent",(req,res)=>{
         endtime:req.body.endtime,
         timezone:req.body.timezone
     });
-    // console.log(newEvent);
     newEvent.save().then(()=>{
-        console.log("Event created successfully");
         res.send(newEvent);
     });
 });
 app.post("/eventnames",(req,res)=>{
     Event.find({uid:req.body.username}).then((events)=>{
         res.send(events);
-        console.log("Event names Sent Successfully");
     });
 });
 app.post("/eventdetails",(req,res)=>{
     Event.find({uid:req.body.username,_id:req.body._id}).then((events)=>{
         res.send(events);
-        console.log("Event details Sent Successfully");
     });
 });
 
 app.get('/oauth2callback', async (req, res) => {
   const code = req.query.code;
   try {
-    // Exchange the authorization code for tokens
     const r = await oauth2Client.getToken(code);
     await oauth2Client.setCredentials(r.tokens);
-    // console.log(oauth2Client);
     const calendar = google.calendar({version: 'v3', auth:oauth2Client});
     const caller = await client.get('caller');
     const details=await client.hGetAll('eventdetails');
-    console.log(details);
     if(caller==="save")
     {
-      // console.log(details._id);
       const eventdetails = {
         'summary': details.eventname,
         'location': details.location,
@@ -201,7 +186,6 @@ app.get('/oauth2callback', async (req, res) => {
           ],
         },
       };
-      // console.log(eventdetails);
       calendar.events.insert({
         auth: oauth2Client,
         calendarId: 'primary',
@@ -209,16 +193,14 @@ app.get('/oauth2callback', async (req, res) => {
       }, function(err, event) {
         if (err) {
           console.log('There was an error contacting the Calendar service: ' + err);
-          return;
+          const redirectUrl = 'http://localhost:3000/events';
+          res.redirect(302,redirectUrl);
         }
         else{
-          // console.log("event created");
-          // console.log(event.data.htmlLink);
           const eventFinder={
             _id:details._id
             }
             Event.findOneAndUpdate(eventFinder,{eventid:event.data.id},{returnOriginal:false}).then((e)=>{console.log(e);});
-            // const redirectUrl = 'http://localhost:3000/events';
             res.redirect(302,event.data.htmlLink);
         }
       });
@@ -229,7 +211,6 @@ app.get('/oauth2callback', async (req, res) => {
       const eventId=details.eventid;
       calendar.events.delete({calendarId , eventId }, (err) => {
           if (err) return console.error('Error deleting event:', err);
-          console.log('Event deleted successfully from calendar');
           const redirectUrl = 'http://localhost:3000/events';
           res.redirect(302,redirectUrl);
       });
@@ -326,8 +307,7 @@ app.post("/login",(req,res)=>{
     req.login(user,(err)=>{
       if(err)
         {
-            console.log("Login error");
-            res.send("Login error")
+            res.send("Login error");
         }
         else
         {

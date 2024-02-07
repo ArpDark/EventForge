@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Navbar from './Navbar';
 
 const Pomodoro = () => {
   const [sessionType, setSessionType] = useState('Work');
@@ -13,7 +14,6 @@ const Pomodoro = () => {
     let interval;
 
     if (isActive && minutes === 0 && seconds === 0) {
-      // Switch between work and break sessions
       setSessionType(prevSessionType => prevSessionType === 'Work' ? 'Short Break' : 'Work');
       if (sessionType === 'Work') {
         setMinutes(shortBreakDuration);
@@ -88,15 +88,8 @@ const Pomodoro = () => {
 
   return (
     <div className='flex relative border-2 border-red-400 justify-center'>
-      <div className="flex fixed  justify-center bg-[#2D2D2D] w-screen h-28 space-x-12 [box-shadow:_0px_15px_10px_rgb(0_0_0_/_25%)] z-10 ">
-        <a href="/home" className="flex h-10 w-36 self-center justify-center  rounded-md bg-white px-3 py-2 text-sm  font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 ">My Notes</a>
-
-        <a href="/events" className="flex h-10 w-36 self-center justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 ">My Events</a>
-
-        <a href="/pomodoro" className="flex h-10 w-36 self-center justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 ">Pomodoro</a>
-        
-        <button className="flex h-10 w-36 self-center justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 " onClick={handleLogout} >Log Out</button>
-      </div>
+      <Navbar/>
+      
       <div className="flex relative mt-36 border-2 border-blue-500 ">
         <div className='flex flex-col items-center bg-red-300'>
           <div className='flex space-x-5 '>

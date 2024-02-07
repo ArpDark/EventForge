@@ -23,7 +23,6 @@ function Login(){
     axios(configuration)
     .then((result)=>{
       window.localStorage.setItem('user', result.data.username);
-      // console.log(result.data.username);
       navigate("/home");
     })
     .catch((error)=>{console.log(error);});

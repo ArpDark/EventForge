@@ -25,9 +25,6 @@ function Signup(){
     axios(configuration)
     .then((result)=>{
       window.localStorage.setItem('user', result.data.username);
-      
-      console.log(result.data.username);
-      // console.log(typeof result.data);
       navigate("/home");
     })
     .catch((error)=>{console.log(error);});

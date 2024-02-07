@@ -5,25 +5,7 @@ import qs from "qs";
 
 
 const NoteDetailPopup = ({isOpen, onClose,noteDetails}) =>{
-
-    const saveOnCalendar=()=>{
-        // console.log(noteDetails[0]);
-
-        // const config={
-        //     method:'post',
-        //     url:'http://localhost:8000/saveoncalendar',
-        //     headers: { 'content-type': 'application/x-www-form-urlencoded' },
-        //     data:qs.stringify(noteDetails[0])
-        // };
-        // axios(config)
-        // .then((result)=>{
-        //     console.log("Event saved");
-        // })
-        // .catch((error)=>{console.log("Error occurred");});
-
-    }
     const deleteNote=()=>{
-        console.log(noteDetails[0]);
         const config={
             method:'post',
             url:'http://localhost:8000/notedelete',
@@ -32,7 +14,6 @@ const NoteDetailPopup = ({isOpen, onClose,noteDetails}) =>{
         };
         axios(config)
         .then((result)=>{
-            console.log(result.data);
             window.location.reload();
         })
         .catch((error)=>{console.log("Error occurred");});
@@ -50,7 +31,6 @@ const NoteDetailPopup = ({isOpen, onClose,noteDetails}) =>{
                         <label htmlFor="content" className="block text-gray-600">Content</label>
                         <p id='desc'>{noteDetails[0].notecontent}</p>
                     </div>
-                    {/* <button onClick={saveOnCalendar} className="bg-blue-500 text-white p-2 rounded-md w-full">Save</button> */}
                     <button onClick={deleteNote} className="bg-blue-500 text-white p-2 mt-2 rounded-md w-full">Delete</button>
                     <button onClick={onClose} className="mt-2 text-sm text-gray-500 hover:text-gray-700 cursor-pointer">Close</button>
                 </div>
