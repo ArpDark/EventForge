@@ -16,9 +16,13 @@ jobs:
     name: Build and Deploy Job
     steps:
       - uses: actions/checkout@v3
+        # with:
+          # submodules: true
+          # lfs: false
+      - name: Set up Node.js
+        uses: actions/setup-node@v4.0.2
         with:
-          submodules: true
-          lfs: false
+          node-version: 20
       - name: Install dependencies
         run: npm install
       - name: Build
