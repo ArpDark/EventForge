@@ -27,7 +27,7 @@ const oauth2Client = new google.auth.OAuth2(
 const app = express();
 app.use(cors());
 const corsOptions ={
-    origin:'http://localhost:3000', 
+    origin:'http://localhost:4173', 
     credentials:true,            
     optionSuccessStatus:200
 }
