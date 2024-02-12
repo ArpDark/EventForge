@@ -58,5 +58,5 @@ jobs:
         with:
           app-name: 'eventforgebackend'
           slot-name: 'Production'
-          package: ./backend
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_6B9AA6D5891144CCAEE02A00238ED706 }}
+          package: .
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_715861F42BBC40459438D01A5F2F705F }}
