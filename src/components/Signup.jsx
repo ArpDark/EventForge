@@ -2,13 +2,16 @@ import React,{useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import qs from 'qs';
+// import 'dotenv/config';
+// import dotenv from 'dotenv';
+// dotenv.config();
 
 function Signup(){
   const [username,setUsername]=useState("");
   const [email,setEmail]=useState("");
   const [password,setPassword]=useState("");
   const navigate=useNavigate();
-  const apiUrl='http://localhost:8000';
+  const apiUrl=import.meta.env.VITE_API_URI;
 
   function handleSubmit(event){
     event.preventDefault();

@@ -10,7 +10,7 @@ import DateRangeIcon from '@mui/icons-material/DateRange';
 
 
 const EventDetailsPopup = ({isOpen, onClose,eventDetails}) =>{
-    const apiUrl='http://localhost:8000';
+    const apiUrl=import.meta.env.VITE_API_URI;
 
     const saveOnCalendar=()=>{
         console.log(eventDetails[0]);

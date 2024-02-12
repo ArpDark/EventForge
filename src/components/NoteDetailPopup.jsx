@@ -5,7 +5,7 @@ import qs from "qs";
 
 
 const NoteDetailPopup = ({isOpen, onClose,noteDetails}) =>{
-    const apiUrl='http://localhost:8000';
+    const apiUrl=import.meta.env.VITE_API_URI;
     const deleteNote=()=>{
         const config={
             method:'post',

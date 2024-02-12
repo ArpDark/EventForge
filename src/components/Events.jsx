@@ -14,7 +14,7 @@ function Home(){
   const [events,setEvents]=useState([]);
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [isPopupOpenD, setPopupOpenD] = useState(false);
-  const apiUrl='http://localhost:8000';
+  const apiUrl=import.meta.env.VITE_API_URI;
 
   useEffect(() => {
     const fetchUser= async()=>{

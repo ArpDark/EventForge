@@ -6,7 +6,7 @@ import qs from 'qs';
 function Login(){
   const [username,setUsername]=useState("");
   const [password,setPassword]=useState("");
-  const apiUrl='http://localhost:8000';
+  const apiUrl=import.meta.env.VITE_API_URI;
   const navigate=useNavigate();
 
   function handleSubmit(event){
