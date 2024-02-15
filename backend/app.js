@@ -25,13 +25,13 @@ const oauth2Client = new google.auth.OAuth2(
 );
 
 const app = express();
-app.use(cors());
-const corsOptions ={
-    origin:process.env.ORIGIN_URI, 
-    credentials:true,            
-    optionSuccessStatus:200
-}
-app.use(cors(corsOptions));
+// app.use(cors());
+// const corsOptions ={
+//     origin:process.env.ORIGIN_URI, 
+//     credentials:true,            
+//     optionSuccessStatus:200
+// }
+// app.use(cors(corsOptions));
 app.use(bodyParser.urlencoded({extended: true}));
 // app.use(express.static("public"));
 
