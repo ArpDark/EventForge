@@ -25,7 +25,7 @@ const oauth2Client = new google.auth.OAuth2(
 );
 
 const app = express();
-// app.use(cors());
+app.use(cors());
 // const corsOptions ={
 //     origin:process.env.ORIGIN_URI, 
 //     credentials:true,            
