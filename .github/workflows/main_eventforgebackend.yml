@@ -53,7 +53,7 @@ jobs:
           name: node-app
 
       - name: Unzip artifact for deployment
-        working-directory: backend
+        # working-directory: backend
         run: unzip release.zip -d backend
       
       - name: Login to Azure
