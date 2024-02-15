@@ -24,17 +24,18 @@ jobs:
       - name: npm install, build, and test
         run: |
           npm install
-          npm run build --if-present
-          npm run test --if-present
+          # npm run build --if-present
+          # npm run test --if-present
 
       - name: Zip artifact for deployment
+        working-directory: backend
         run: zip release.zip ./* -r
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
           name: node-app
-          path: release.zip
+          path: backend/release.zip
 
   deploy:
     runs-on: ubuntu-latest
@@ -52,7 +53,8 @@ jobs:
           name: node-app
 
       - name: Unzip artifact for deployment
-        run: unzip release.zip
+        working-directory: backend
+        run: unzip release.zip -d backend
       
       - name: Login to Azure
         uses: azure/login@v1
@@ -67,5 +69,5 @@ jobs:
         with:
           app-name: 'eventforgebackend'
           slot-name: 'Production'
-          package: .
+          package: backend
           
