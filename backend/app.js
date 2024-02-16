@@ -104,6 +104,10 @@ passport.deserializeUser(function(user, cb) {
   });
 });
 
+
+app.get("/",(req,res)=>{
+  res.send("Welcome to eventforge backend");
+});
 app.post("/createnote",(req,res)=>{
     const note=new Note({
         notename:req.body.notename,
