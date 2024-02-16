@@ -51,8 +51,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: node-app
-          path: ./backend
-
+          
       - name: Unzip artifact for deployment
         # working-directory: backend
         run: unzip release.zip -d backend
