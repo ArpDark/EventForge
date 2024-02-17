@@ -71,5 +71,5 @@ jobs:
         with:
           app-name: 'eventforgebackend'
           slot-name: 'Production'
-          package: ./backend
+          package: backend
           
