@@ -7,8 +7,8 @@ const Navbar=()=>{
         navigate("/login");
     }
     return (
-        <div className="flex fixed  justify-center bg-[#2D2D2D] w-screen h-28 space-x-12 [box-shadow:_0px_15px_10px_rgb(0_0_0_/_25%)] z-10 ">
-            <a href="/home" className="flex h-10 w-36 self-center justify-center  rounded-md bg-white px-3 py-2 text-sm  font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 ">My Notes</a>
+        <div className="flex fixed overflow-auto  justify-center bg-[#2D2D2D] w-screen h-28 space-x-12 [box-shadow:_0px_15px_10px_rgb(0_0_0_/_25%)] z-10 ">
+            <a href="/home" className=" flex h-10 w-36 self-center justify-center  rounded-md bg-white px-3 py-2 text-sm  font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 ">My Notes</a>
 
             <a href="/events" className="flex h-10 w-36 self-center justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 ">My Events</a>
 

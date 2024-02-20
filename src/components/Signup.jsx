@@ -39,7 +39,7 @@ function Signup(){
 
       <h1 className='flex  font-sans text-2xl mt-10 font-semibold '>Sign Up in EfficiencyHub</h1>
       
-      <form action="/Signup" method="" className='grid gap-4 pt-4 mt-10 w-1/4 bg-white shadow-md rounded px-8'>
+      <form action="/Signup" method="" className='grid gap-4 pt-4 mt-10 w-1/2 md:w-1/4 bg-white shadow-md rounded px-8'>
 
         <div className='flex flex-col'>
           <label htmlFor="username" className='text-lg font-sans font-medium'>Username</label>
@@ -54,7 +54,7 @@ function Signup(){
           <input placeholder='Password' className="bg-gray-50 border-2 border-gray-300 text-gray-900 text-sm rounded-lg focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-full p-2.5" onChange={(event)=>{setPassword(event.target.value)}} type="password" name="password"/>
         </div>
 
-        <button type="submit" onClick={handleSubmit} className='flex justify-center place-self-center w-1/2 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow mt-4 mb-4'>Sign Up</button>
+        <button type="submit" onClick={handleSubmit} className='flex justify-center place-self-center w-3/4 md:w-1/2 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow mt-4 mb-4'>Sign Up</button>
       </form>
     </div>
   )
