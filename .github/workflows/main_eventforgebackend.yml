@@ -75,6 +75,6 @@ jobs:
         with:
           app-name: 'eventforgebackend'
           slot-name: 'Production'
-          # target-path: /backend
-          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+          target-path: /backend
+          # package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
           
