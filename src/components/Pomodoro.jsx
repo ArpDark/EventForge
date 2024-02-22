@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './Navbar';
-
+import PomodoroSettings from './PomodoroSettings';
+import SettingsIcon from '@mui/icons-material/Settings';
+import PauseIcon from '@mui/icons-material/Pause';
+import PlayCircleFilledWhiteIcon from '@mui/icons-material/PlayCircleFilledWhite';
 const Pomodoro = () => {
   const [sessionType, setSessionType] = useState('Work');
   const [minutes, setMinutes] = useState(25);
@@ -9,10 +12,9 @@ const Pomodoro = () => {
   const [workDuration, setWorkDuration] = useState(25);
   const [shortBreakDuration, setShortBreakDuration] = useState(5);
   const [longBreakDuration, setLongBreakDuration] = useState(15);
-
+  const [isOpen,setIsOpen]=useState(false);
   useEffect(() => {
     let interval;
-
     if (isActive && minutes === 0 && seconds === 0) {
       setSessionType(prevSessionType => prevSessionType === 'Work' ? 'Short Break' : 'Work');
       if (sessionType === 'Work') {
@@ -21,7 +23,6 @@ const Pomodoro = () => {
         setMinutes(workDuration);
       }
     }
-
     if (isActive) {
       interval = setInterval(() => {
         if (seconds === 0) {
@@ -39,14 +40,11 @@ const Pomodoro = () => {
     } else {
       clearInterval(interval);
     }
-
     return () => clearInterval(interval);
   }, [isActive, minutes, seconds, sessionType, workDuration, shortBreakDuration,longBreakDuration]);
-
   const toggleTimer = () => {
     setIsActive(!isActive);
   };
-
   const resetTimer = () => {
     setIsActive(false);
     setSessionType('Work');
@@ -80,67 +78,49 @@ const Pomodoro = () => {
       setIsActive(!isActive);
     }
   }
-
-  function handleLogout(){
-    localStorage.clear();
-    navigate("/login");
+// 
+  const newSettings=(settingsData)=>{
+    // console.log(settingsData);
+    setWorkDuration(settingsData.workDuration);
+    setShortBreakDuration(settingsData.shortBreakDuration);
+    setLongBreakDuration(settingsData.longBreakDuration);
   }
-
+  const openPopup = () => {
+    setIsOpen(true);
+  };
+  const closePopup = () => {
+    setIsOpen(false);
+  };
   return (
-    <div className='flex relative border-2 border-red-400 justify-center'>
+    <div className='flex relative min-h-screen h-dvh overflow-y-auto justify-center'>
       <Navbar/>
-      
-      <div className="flex relative mt-36 border-2 border-blue-500 ">
-        <div className='flex flex-col items-center bg-red-300'>
-          <div className='flex space-x-5 '>
-            <button className=' bg-red-400 rounded-md w-32 h-10' onClick={switchToWork}>Work</button>
-            <button className='bg-red-400 rounded-md w-32 h-10' onClick={switchToShortBreak}>Short Break</button>
-            <button className='bg-red-400 rounded-md w-32 h-10' onClick={switchToLongBreak}>Long Break</button>
+      <div className="flex flex-col relative w-screen bg-red-200 border-yellow-300 border-2 items-center ">
+        <div className='flex flex-col items-center bg-red-400 w-5/6 md:w-2/5 mt-36 rounded-2xl shadow-md shadow-red-800'>
+          <div className='flex justify-around  w-full mt-4'>
+            <button className="bg-red-600 rounded-md  p-2 text-sm w-20 md:w-36 font-['Orbitron'] font-medium" onClick={switchToWork}>WORK</button>
+            <button className="bg-red-600 rounded-md  p-2 text-sm w-20 md:w-36 font-['Orbitron'] font-medium" onClick={switchToShortBreak}>SHORT BREAK</button>
+            <button className="bg-red-600 rounded-md  p-2 text-sm w-20 md:w-36 font-['Orbitron'] font-medium" onClick={switchToLongBreak}>LONG BREAK</button>
           </div>
-          <div className='flex flex-col items-center'>
-            <h1>{sessionType} Session</h1>
-            <div className="timer"> 
+          <div className="flex flex-col items-center">
+            <h1 className="font-semibold text-xl p-2 mt-2 font-['Orbitron']">{sessionType} Session</h1>
+            <div className="font-['Orbitron'] text-6xl md:text-7xl p-1" id='timer'> 
               <span>
                 {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
               </span>
             </div>
           </div>
-          <div className="buttons">
-            <button onClick={toggleTimer} className='border-2'>
-              {isActive ? 'Pause' : 'Start'}
+          <div className="flex justify-around w-3/4 md:w-2/5 mt-4 pb-4" id='buttons' >
+            <button onClick={toggleTimer} className=' bg-red-600 rounded-2xl font-orbitron font-medium shadow-md shadow-red-700 hover:shadow-none'>
+              {isActive ? <PauseIcon style={{ fontSize: '2rem' }}/> : <PlayCircleFilledWhiteIcon style={{ fontSize: '2rem' }}/>}
             </button>
-            <button onClick={resetTimer} className='border-2'>Reset</button>
-            <button className='border-2'>Settings</button>
+            <button onClick={resetTimer} className=' bg-red-600 rounded-md font-orbitron font-medium shadow-md shadow-red-700 hover:shadow-none'>RESET</button>
+            <button className=' bg-red-600 rounded-2xl font-orbitron font-medium shadow-md shadow-red-700 hover:shadow-none' onClick={openPopup}><SettingsIcon style={{ fontSize: '2rem' }}/></button>
           </div>
         </div>
-
-        <div className=" hidden">
-          <div>
-            <label>Work Duration (minutes):</label>
-            <input
-              type="number"
-              value={workDuration}
-              onChange={(event) => setWorkDuration(parseInt(event.target.value, 10))}
-            />
-          </div>
-          <div>
-            <label>Short Break Duration (minutes):</label>
-            <input
-              type="number"
-              value={shortBreakDuration}
-              onChange={(e) => setShortBreakDuration(parseInt(e.target.value, 10))}
-            />
-          </div>
-          <div>
-            <label>Long Break Duration (minutes):</label>
-            <input
-              type="number"
-              value={longBreakDuration}
-              onChange={(e) => setLongBreakDuration(parseInt(e.target.value, 10))}
-            />
-          </div>
-        </div>
-        
+        <PomodoroSettings 
+        isOpen={isOpen} 
+        onClose={closePopup} 
+        newSettings={newSettings}/>
       </div>
     </div>
   );

@@ -45,7 +45,6 @@ function Home(){
 
   const openPopup = () => {
     setPopupOpen(true);
-    setIsOpen(true);
   };
   const closePopup = () => {
     setPopupOpen(false);
