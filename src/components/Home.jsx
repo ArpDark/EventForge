@@ -124,20 +124,20 @@ function Home(){
 
   if(user){
   return (
-    <div className="flex relative min-h-screen h-dvh overflow-y-auto bg-slate-50 justify-center">
+    <div className="flex relative min-h-screen h-dvh overflow-y-auto bg-teal-100 justify-center">
       <Navbar/>
       
-      <div className="grid grid-flow-row grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-16 relative mt-36 border-2 border-green-200 z-0">
+      <div className="grid grid-flow-row grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-16 relative mt-36 z-0">
 
-        <button onClick={openPopup} className="grid  bg-white text-black shadow-lg rounded-md w-60 h-36 justify-center items-center">
+        <button onClick={openPopup} className="grid  bg-teal-300 text-black shadow-md shadow-teal-500 hover:shadow-none rounded-md w-60 h-36 justify-center items-center">
           <div>
             <AddOutlinedIcon sx={{fontSize:72}}/>
           </div>
         </button>
         <Popup isOpen={isPopupOpen} onClose={closePopup} createNote={createNote} />
         
-        {notes.map((Note) => (<button onClick={()=>{openPopupD(Note)}} className="grid rounded-md shadow-md bg-white w-60 h-36 justify-center items-center">
-          <p className="text-xl font-medium" >{Note.notename}</p>
+        {notes.map((Note) => (<button onClick={()=>{openPopupD(Note)}} className="grid rounded-md  bg-teal-300  shadow-sm shadow-teal-500 hover:shadow-none w-60 h-36 justify-center items-center">
+          <p className="text-2xl font-medium text-gray-800 " >{Note.notename}</p>
           <p className="border-2 border-red-200  truncate " >{Note.notecontent}</p>
           </button>))}
 

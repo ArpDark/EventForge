@@ -79,11 +79,12 @@ const Pomodoro = () => {
     }
   }
 // 
-  const newSettings=(settingsData)=>{
-    // console.log(settingsData);
+  const newSettings=async(settingsData)=>{
+    console.log(settingsData);
     setWorkDuration(settingsData.workDuration);
     setShortBreakDuration(settingsData.shortBreakDuration);
     setLongBreakDuration(settingsData.longBreakDuration);
+    await resetTimer;
   }
   const openPopup = () => {
     setIsOpen(true);
@@ -94,12 +95,12 @@ const Pomodoro = () => {
   return (
     <div className='flex relative min-h-screen h-dvh overflow-y-auto justify-center'>
       <Navbar/>
-      <div className="flex flex-col relative w-screen bg-red-200 border-yellow-300 border-2 items-center ">
-        <div className='flex flex-col items-center bg-red-400 w-5/6 md:w-2/5 mt-36 rounded-2xl shadow-md shadow-red-800'>
+      <div className="flex flex-col relative w-screen bg-emerald-100 border-yellow-300 border-2 items-center ">
+        <div className='flex flex-col items-center bg-emerald-300 w-5/6 md:w-2/5 mt-36 rounded-2xl shadow-md shadow-emerald-800'>
           <div className='flex justify-around  w-full mt-4'>
-            <button className="bg-red-600 rounded-md  p-2 text-sm w-20 md:w-36 font-['Orbitron'] font-medium" onClick={switchToWork}>WORK</button>
-            <button className="bg-red-600 rounded-md  p-2 text-sm w-20 md:w-36 font-['Orbitron'] font-medium" onClick={switchToShortBreak}>SHORT BREAK</button>
-            <button className="bg-red-600 rounded-md  p-2 text-sm w-20 md:w-36 font-['Orbitron'] font-medium" onClick={switchToLongBreak}>LONG BREAK</button>
+            <button className="bg-emerald-600 rounded-md  p-2 text-sm w-20 md:w-36 font-['Orbitron'] font-medium shadow-md shadow-emerald-700 hover:shadow-none" onClick={switchToWork}>WORK</button>
+            <button className="bg-emerald-600 rounded-md  p-2 text-sm w-20 md:w-36 font-['Orbitron'] font-medium shadow-md shadow-emerald-700 hover:shadow-none" onClick={switchToShortBreak}>SHORT BREAK</button>
+            <button className="bg-emerald-600 rounded-md  p-2 text-sm w-20 md:w-36 font-['Orbitron'] font-medium shadow-md shadow-emerald-700 hover:shadow-none" onClick={switchToLongBreak}>LONG BREAK</button>
           </div>
           <div className="flex flex-col items-center">
             <h1 className="font-semibold text-xl p-2 mt-2 font-['Orbitron']">{sessionType} Session</h1>
@@ -110,11 +111,11 @@ const Pomodoro = () => {
             </div>
           </div>
           <div className="flex justify-around w-3/4 md:w-2/5 mt-4 pb-4" id='buttons' >
-            <button onClick={toggleTimer} className=' bg-red-600 rounded-2xl font-orbitron font-medium shadow-md shadow-red-700 hover:shadow-none'>
+            <button onClick={toggleTimer} className=' bg-emerald-600 rounded-2xl font-orbitron font-medium shadow-sm shadow-emerald-700 hover:shadow-none'>
               {isActive ? <PauseIcon style={{ fontSize: '2rem' }}/> : <PlayCircleFilledWhiteIcon style={{ fontSize: '2rem' }}/>}
             </button>
-            <button onClick={resetTimer} className=' bg-red-600 rounded-md font-orbitron font-medium shadow-md shadow-red-700 hover:shadow-none'>RESET</button>
-            <button className=' bg-red-600 rounded-2xl font-orbitron font-medium shadow-md shadow-red-700 hover:shadow-none' onClick={openPopup}><SettingsIcon style={{ fontSize: '2rem' }}/></button>
+            <button onClick={resetTimer} className=' bg-emerald-600 rounded-md font-orbitron font-medium shadow-sm shadow-emerald-700 hover:shadow-none'>RESET</button>
+            <button className=' bg-emerald-600 rounded-2xl font-orbitron font-medium shadow-sm shadow-emerald-700 hover:shadow-none' onClick={openPopup}><SettingsIcon style={{ fontSize: '2rem' }}/></button>
           </div>
         </div>
         <PomodoroSettings 

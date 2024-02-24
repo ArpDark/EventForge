@@ -24,7 +24,7 @@ const NoteDetailPopup = ({isOpen, onClose,noteDetails}) =>{
     {
         return (
             <div className={`fixed top-0 left-0 z-20 w-full h-full flex items-center justify-center ${isOpen ? '' : 'hidden'}`}>
-                <div className="bg-white p-6 rounded-lg shadow-lg">
+                <div className="bg-teal-200 p-6 rounded-lg shadow-lg">
                     <h2 className="text-2xl mb-4">{noteDetails[0].notename}</h2>
                     <div>
                         <label htmlFor="name" className="block text-gray-600">Name</label>

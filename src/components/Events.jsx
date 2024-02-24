@@ -130,18 +130,18 @@ function Home(){
 
   if(user){
   return (
-    <div className="flex relative min-h-screen h-dvh overflow-y-auto bg-slate-50 justify-center">
+    <div className="flex relative min-h-screen h-dvh overflow-y-auto bg-teal-100 justify-center">
       <Navbar/>
-      <div className="grid grid-flow-row  grid-cols-1 md:grid-cols-4 gap-16 relative mt-36 border-2 border-green-200 z-10">
+      <div className="grid grid-flow-row  grid-cols-1  md:grid-cols-2 xl:grid-cols-4 gap-16 relative mt-36 border-2 border-green-200 z-0">
 
-        <button onClick={openPopup} className="grid  bg-white text-black shadow-lg rounded-md w-60 h-36 justify-center items-center">
+        <button onClick={openPopup} className="grid bg-teal-300  shadow-md shadow-teal-500 hover:shadow-none  text-black  rounded-md w-60 h-36 justify-center items-center">
           <div>
             <AddOutlinedIcon sx={{fontSize:72}}/>
           </div>
         </button>
         <EventPopup isOpen={isPopupOpen} onClose={closePopup} createEvent={createEvent} />
         
-        {events.map((Event) => (<button onClick={()=>{openPopupD(Event)}} className="grid rounded-md shadow-md bg-white w-60 h-36 justify-center items-center" >
+        {events.map((Event) => (<button onClick={()=>{openPopupD(Event)}} className="grid rounded-md bg-teal-300  shadow-sm shadow-teal-500 hover:shadow-none w-60 h-36 justify-center items-center" >
           <p className="text-xl font-medium">{Event.eventname}</p>
         </button>))}
 

@@ -5,13 +5,13 @@ const PomodoroSettings=({isOpen, onClose, newSettings})=>{
     const [shortBreakDuration, setShortBreakDuration] = useState(5);
     const [longBreakDuration, setLongBreakDuration] = useState(15);
 
-    const handleSubmit=()=>{
+    const handleSubmit=async()=>{
         const settingsData={
             'workDuration':workDuration,
             'shortBreakDuration':shortBreakDuration,
             'longBreakDuration':longBreakDuration
         }
-        newSettings(settingsData);
+        await newSettings(settingsData);
         onClose();
 
     }
