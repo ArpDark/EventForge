@@ -37,11 +37,6 @@ function Home(){
     }
     fetchUser();
   }, []);
-  
-  function handleLogout(){
-    localStorage.clear();
-    navigate("/login");
-  }
 
   const openPopup = () => {
     setPopupOpen(true);
@@ -134,25 +129,27 @@ function Home(){
             <AddOutlinedIcon sx={{fontSize:72}}/>
           </div>
         </button>
-        <Popup isOpen={isPopupOpen} onClose={closePopup} createNote={createNote} />
+        {/* <Popup isOpen={isPopupOpen} onClose={closePopup} createNote={createNote} /> */}
         
         {notes.map((Note) => (<button onClick={()=>{openPopupD(Note)}} className="grid rounded-md  bg-teal-300  shadow-sm shadow-teal-500 hover:shadow-none w-60 h-36 justify-center items-center">
           <p className="text-2xl font-medium text-gray-800 " >{Note.notename}</p>
-          <p className="border-2 border-red-200  truncate " >{Note.notecontent}</p>
+          <p className=" px-2 truncate " >{Note.notecontent}</p>
           </button>))}
 
-        <NoteDetailPopup isOpen={isPopupOpenD} onClose={closePopupD} noteDetails={noteDetails}/>
         
       </div>
+      <Popup isOpen={isPopupOpen} onClose={closePopup} createNote={createNote} />
+      <NoteDetailPopup isOpen={isPopupOpenD} onClose={closePopupD} noteDetails={noteDetails}/>
     </div>  // Outer most div
   );
   }
   else
   {
+    // navigate("/login");
     return(
       <div>
-        <p>Not Logged IN</p>
-        <a href="/login">Login</a>
+        {/* <p>Not Logged IN</p> */}
+        {/* <a href="/login">Login</a> */}
       </div>
     );
   }

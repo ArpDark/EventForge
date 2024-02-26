@@ -197,7 +197,7 @@ app.get('/oauth2callback', async (req, res) => {
       }, function(err, event) {
         if (err) {
           console.log('There was an error contacting the Calendar service: ' + err);
-          const redirectUrl = 'http://localhost:3000/events';
+          const redirectUrl = process.env.ORIGIN_URI+'/events';
           res.redirect(302,redirectUrl);
         }
         else{
@@ -311,7 +311,7 @@ app.post("/login",(req,res)=>{
     req.login(user,(err)=>{
       if(err)
         {
-            res.send("Login error");
+          throw err;
         }
         else
         {

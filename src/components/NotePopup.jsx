@@ -27,15 +27,16 @@ const Popup= ({ isOpen, onClose, createNote }) => {
 
 
   return (
-    <div className={`fixed top-0 border-2 border-yellow-300 backdrop-blur-[2px] z-20 left-0 w-full h-full flex items-center justify-center ${isOpen ? '' : 'hidden'}`}>
-      <div className="bg-teal-200 p-6 rounded-lg shadow-lg">
+    <div className={`fixed top-0 backdrop-blur-[2px] z-20 left-0 w-full h-full flex items-center justify-center ${isOpen ? '' : 'hidden'}`}>
+      <div className="bg-teal-200 p-6 rounded-lg shadow-lg w-80">
         <h2 className="text-2xl mb-4">New Note</h2>
         <form onSubmit={handleSubmit}>
           <label htmlFor="name" className="block text-gray-600" >Name:</label>
           <input type="text" id="name" name="name" onChange={handleChange} className="w-full border rounded-md px-3 py-2 mb-2 bg-teal-50 " placeholder='Note Name' required value={noteName}/>
           <label htmlFor="name" className="block text-gray-600">Content:</label>
-          <input type="text" id="name" name="name" onChange={handleChange1} className="w-full border rounded-md px-3 py-2 mb-2 bg-teal-50" placeholder='Content' required value={noteContent}/>
-          <button type="submit" className="bg-teal-500 shadow-md hover:shadow-none font-medium text-teal-50 hover:text-white p-2 rounded-md w-full">
+          <textarea type="text" id="name" name="name" onChange={handleChange1} rows={5}
+           className="w-full border rounded-md px-3 py-2 mb-2 bg-teal-50" placeholder='Content' required value={noteContent}/>
+          <button type="submit" className="bg-teal-500 shadow-md hover:shadow-none font-medium text-teal-50 hover:text-white p-2 rounded-md w-full ">
             Submit
           </button>
         </form>

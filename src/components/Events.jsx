@@ -7,7 +7,7 @@ import axios from "axios";
 import qs from "qs";
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 
-function Home(){
+function Events(){
   const navigate=useNavigate();
   const [user,setUser]=useState("");
   const [eventDetails,setEventDetails]=useState({});
@@ -31,11 +31,6 @@ function Home(){
     }
     fetchUser();
   }, []);
-  
-  function handleLogout(){
-    localStorage.clear();
-    navigate("/login");
-  }
 
   const openPopup = () => {
     setPopupOpen(true);
@@ -132,34 +127,33 @@ function Home(){
   return (
     <div className="flex relative min-h-screen h-dvh overflow-y-auto bg-teal-100 justify-center">
       <Navbar/>
-      <div className="grid grid-flow-row  grid-cols-1  md:grid-cols-2 xl:grid-cols-4 gap-16 relative mt-36 border-2 border-green-200 z-0">
+      <div className="grid grid-flow-row  grid-cols-1  md:grid-cols-2 xl:grid-cols-4 gap-16 relative mt-36 z-0">
 
         <button onClick={openPopup} className="grid bg-teal-300  shadow-md shadow-teal-500 hover:shadow-none  text-black  rounded-md w-60 h-36 justify-center items-center">
           <div>
             <AddOutlinedIcon sx={{fontSize:72}}/>
           </div>
         </button>
-        <EventPopup isOpen={isPopupOpen} onClose={closePopup} createEvent={createEvent} />
         
         {events.map((Event) => (<button onClick={()=>{openPopupD(Event)}} className="grid rounded-md bg-teal-300  shadow-sm shadow-teal-500 hover:shadow-none w-60 h-36 justify-center items-center" >
           <p className="text-xl font-medium">{Event.eventname}</p>
         </button>))}
 
-        <EventDetailsPopup isOpen={isPopupOpenD} onClose={closePopupD} eventDetails={eventDetails}/>
         
       </div>
+      <EventPopup isOpen={isPopupOpen} onClose={closePopup} createEvent={createEvent} />
+      <EventDetailsPopup isOpen={isPopupOpenD} onClose={closePopupD} eventDetails={eventDetails}/>
     </div>
   );
   }
   else
   {
+    navigate("/login");
     return(
       <div>
-        <p>Not Logged IN</p>
-        <a href="/login">Login</a>
       </div>
     );
   }
 }
 
-export default Home;
+export default Events;

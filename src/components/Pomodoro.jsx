@@ -95,7 +95,7 @@ const Pomodoro = () => {
   return (
     <div className='flex relative min-h-screen h-dvh overflow-y-auto justify-center'>
       <Navbar/>
-      <div className="flex flex-col relative w-screen bg-emerald-100 border-yellow-300 border-2 items-center ">
+      <div className="flex flex-col relative w-screen bg-emerald-100 items-center ">
         <div className='flex flex-col items-center bg-emerald-300 w-5/6 md:w-2/5 mt-36 rounded-2xl shadow-md shadow-emerald-800'>
           <div className='flex justify-around  w-full mt-4'>
             <button className="bg-emerald-600 rounded-md  p-2 text-sm w-20 md:w-36 font-['Orbitron'] font-medium shadow-md shadow-emerald-700 hover:shadow-none" onClick={switchToWork}>WORK</button>
