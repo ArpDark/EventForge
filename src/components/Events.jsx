@@ -6,6 +6,7 @@ import Navbar from "./Navbar.jsx";
 import axios from "axios";
 import qs from "qs";
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
+import Cookies from "js-cookie";
 
 function Events(){
   const navigate=useNavigate();
@@ -55,10 +56,7 @@ function Events(){
     };
     axios(configuration)
     .then((result)=>{
-      // console.log("Result");
       setEventDetails(result.data);
-      // console.log(typeof(result.data));
-      
     })
     .catch((error)=>{console.log(error);}).then(()=>{
       setPopupOpenD(true);
@@ -72,11 +70,6 @@ function Events(){
 
   function createEvent(newEvent){
     
-    // const eventData={
-    //   'username':user,
-    //   'listname':newEvent
-    // }
-    // console.log(newEvent);
     newEvent.username=user;
     const configuration={
       method:'post',
@@ -101,6 +94,9 @@ function Events(){
     const userData={
       'username':window.localStorage.getItem("user")
     };
+
+    Cookies.set("user",window.localStorage.getItem("user"));
+
     const config={
       method:'post',
       url:apiUrl+'/eventnames',

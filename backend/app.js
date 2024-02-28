@@ -4,6 +4,8 @@ import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import _ from 'lodash';
 import session from 'express-session';
+import cookieParser from "cookie-parser";
+import Cookies from "js-cookie";
 import passport from 'passport';
 import passportLocalMongoose from 'passport-local-mongoose';
 import cors from 'cors';
@@ -25,21 +27,25 @@ const oauth2Client = new google.auth.OAuth2(
 );
 
 const app = express();
-app.use(cors());
-// const corsOptions ={
-//     origin:process.env.ORIGIN_URI, 
-//     credentials:true,            
-//     optionSuccessStatus:200
-// }
-// app.use(cors(corsOptions));
+// app.use(cors());
+const corsOptions ={
+    origin:process.env.ORIGIN_URI, 
+    credentials:true,            
+    optionSuccessStatus:200
+}
+app.use(cors(corsOptions));
 app.use(bodyParser.urlencoded({extended: true}));
 // app.use(express.static("public"));
 
 app.use(session({
     secret:"abcdefghijklmnop",
-    resave:true,
+    resave:false,
     saveUninitialized:true,
+    cookie:{
+      maxAge:50000,
+    }
 }));
+app.use(cookieParser());
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -160,14 +166,25 @@ app.post("/eventdetails",(req,res)=>{
     });
 });
 
-app.get('/oauth2callback', async (req, res) => {
-  const code = req.query.code;
+app.post('/oauth2callback', async (req, res) => {
+  const code = req.body.code;
+  const userid = req.body.user;
   try {
     const r = await oauth2Client.getToken(code);
     await oauth2Client.setCredentials(r.tokens);
     const calendar = google.calendar({version: 'v3', auth:oauth2Client});
-    const caller = await client.get('caller');
-    const details=await client.hGetAll('eventdetails');
+    const caller = await client.get('caller'+userid);
+    const details=await client.hGetAll('eventdetails'+userid);
+    client.del(['caller'+userid,'eventdetails'+userid], (err)=>{
+      if(err)
+      {
+        console.log(err);
+      }
+      else
+      {
+        console.log("deleted from redis");
+      }
+    })
     if(caller==="save")
     {
       const eventdetails = {
@@ -198,14 +215,14 @@ app.get('/oauth2callback', async (req, res) => {
         if (err) {
           console.log('There was an error contacting the Calendar service: ' + err);
           const redirectUrl = process.env.ORIGIN_URI+'/events';
-          res.redirect(302,redirectUrl);
+          res.send(redirectUrl);
         }
         else{
           const eventFinder={
             _id:details._id
             }
             Event.findOneAndUpdate(eventFinder,{eventid:event.data.id},{returnOriginal:false}).then((e)=>{console.log(e);});
-            res.redirect(302,event.data.htmlLink);
+            res.send(event.data.htmlLink);
         }
       });
     }
@@ -227,8 +244,8 @@ app.get('/oauth2callback', async (req, res) => {
   }
 });
 app.post("/saveoncalendar",async(req,res)=>{
-  await client.set('caller', 'save');
-  await client.hSet('eventdetails', {
+  await client.set('caller'+req.body.uid, 'save');
+  await client.hSet("eventdetails"+req.body.uid, {
     uid:req.body.uid,
     _id:req.body._id,
     eventname: req.body.eventname,
@@ -242,7 +259,8 @@ app.post("/saveoncalendar",async(req,res)=>{
       access_type: 'offline',
       scope: "https://www.googleapis.com/auth/calendar"
     });
-    open(url, {wait: false});
+    // open(url, {wait: false});
+    res.send(url);
 
   function startDateTime(){
       const utcDate = new Date(req.body.startdate);
@@ -265,8 +283,8 @@ app.post("/saveoncalendar",async(req,res)=>{
 app.post("/eventdelete",async (req,res)=>{
     if(req.body.eventid!=" ")
     {
-      await client.set('caller', 'delete');
-      await client.hSet('eventdetails', {
+      await client.set('caller'+req.body.uid, 'delete');
+      await client.hSet('eventdetails'+req.body.uid, {
         eventid:req.body.eventid
       });
       const url = oauth2Client.generateAuthUrl({

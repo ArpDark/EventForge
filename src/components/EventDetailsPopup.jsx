@@ -7,12 +7,14 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import DescriptionIcon from '@mui/icons-material/Description';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import DateRangeIcon from '@mui/icons-material/DateRange';
+import Cookies from "js-cookie";
 
 
 const EventDetailsPopup = ({isOpen, onClose,eventDetails}) =>{
     const apiUrl=import.meta.env.VITE_API_URI;
 
     const saveOnCalendar=()=>{
+        console.log(Cookies.get("user"));
         console.log(eventDetails[0]);
         const config={
             method:'post',
@@ -22,7 +24,8 @@ const EventDetailsPopup = ({isOpen, onClose,eventDetails}) =>{
         };
         axios(config)
         .then((result)=>{
-            console.log("Event saved");
+            console.log(result.data);
+            window.open(result.data);
         })
         .catch((error)=>{console.log("Error occurred");});
     }
