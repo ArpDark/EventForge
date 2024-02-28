@@ -29,7 +29,7 @@ const Callback = () => {
     }
     calling();
     return(
-        <div>ABCD</div>
+        <div>loading pls wait</div>
     )
 }
 export default Callback;
