@@ -3,14 +3,10 @@
 A web application in which users can create and save notes and events, and also has a pomodoro timer to boost
 user’s productivity.
 
-
 - ## Features: 
     - Fully responsive web application
     - User authentication using localStorage to keep users signed in even after session is closed
-    - enhanced security using passport.js by encrypting user’s pass
-
-
-words
+    - enhanced security using passport.js by encrypting user’s passwords
     -  save and delete events in user’s calendar using Google Calendar API
     -   pomodoro timer with options to customize the work, short break and long break sessions.
 
