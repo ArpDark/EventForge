@@ -1,8 +1,27 @@
-# React + Vite
+# EventForge
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A web application in which users can create and save notes and events, and also has a pomodoro timer to boost
+user’s productivity.
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- ## Features: 
+    - Fully responsive web application
+    - User authentication using localStorage to keep users signed in even after session is closed
+    - enhanced security using passport.js by encrypting user’s pass
+
+
+words
+    -  save and delete events in user’s calendar using Google Calendar API
+    -   pomodoro timer with options to customize the work, short break and long break sessions.
+
+- ## Techstack:
+  -  **Frontend:** HTML, React.js, JavaScript, Tailwind CSS
+  -  **Backend:** Node.js
+  -  **Database:** MongoDB, Redis
+
+- ## Demo:
+
+    https://github.com/ArpDark/EventForge/assets/93087798/c8f8eb32-47cd-4b26-8d1d-d27ad4525c98
+
+- ## Hosting:
+    https://event-forge.vercel.app/
