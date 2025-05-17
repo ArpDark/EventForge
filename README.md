@@ -16,8 +16,7 @@ user’s productivity.
   -  **Database:** MongoDB, Redis
 
 - ## Demo:
-
-    https://github.com/ArpDark/EventForge/assets/93087798/c8f8eb32-47cd-4b26-8d1d-d27ad4525c98
+  https://drive.google.com/file/d/1wL1ZfiHwgfCaE6JamxjOHEuESFKWeTOZ/view?usp=drive_link
 
 - ## Hosting:
     https://event-forge.vercel.app/
